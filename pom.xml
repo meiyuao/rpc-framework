@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.whu.mya</groupId>
+    <artifactId>rpc-framework</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <encoding>UTF-8</encoding>
+        <project.version>1.0-SNAPSHOT</project.version>
+        <netty.version>4.1.42.Final</netty.version>
+        <kryo.version>4.0.2</kryo.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <protostuff.runtime.version>1.6.0</protostuff.runtime.version>
+        <protostuff.core.version>1.6.0</protostuff.core.version>
+    </properties>
+
+    <modules>
+        <module>rpc-framework-core</module>
+        <module>example-client</module>
+        <module>example-server</module>
+        <module>rpc-framework-common</module>
+        <module>rpc-framework-service</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
