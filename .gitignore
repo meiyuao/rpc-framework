@@ -1,6 +1,6 @@
 /.idea/
 /target/
-/rpc-framework-simple/target/
+/rpc-framework-core/target/
 /rpc-framework-common/target/
 /hello-service-api/target/
 /example-server/target/
@@ -8,10 +8,10 @@
 /example-server/example-server.iml
 /example-client/example-client.iml
 /guide-rpc-framework.iml
-/rpc-framework-simple/rpc-framework-simple.iml
+/rpc-framework-simple/rpc-framework-core.iml
 /rpc-framework-common/rpc-framework-common.iml
 /hello-service-api/hello-service-api.iml
-
+/rpc-framework.iml
 /.settings
 */.settings
 .classpath
