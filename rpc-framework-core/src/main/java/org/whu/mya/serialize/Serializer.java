@@ -1,6 +1,10 @@
 package org.whu.mya.serialize;
 
+import org.whu.mya.extension.SPI;
+
+@SPI
 public interface Serializer {
+
     /**
      * 序列化
      * @param obj

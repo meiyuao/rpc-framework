@@ -6,6 +6,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import org.whu.mya.compress.Compress;
 import org.whu.mya.compress.gzip.GzipCompress;
 import org.whu.mya.enums.SerializationTypeEnum;
+import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.remoting.constants.RpcConstants;
 import org.whu.mya.remoting.dto.RpcMessage;
 import org.whu.mya.serialize.Serializer;
@@ -38,12 +39,10 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             && messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
             // serialize the body
             Serializer serializer = null;
-            if (rpcMessage.getCodec() == SerializationTypeEnum.KRYO.getCode()) {
-                serializer = new KryoSerializer();
-            }else if (rpcMessage.getCodec() == SerializationTypeEnum.PROTOSTUFF.getCode()) {
-                serializer = new ProtostuffSerializer();
-            }
+            String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
+            serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(codecName);
             bodyBytes = serializer.serialize(rpcMessage.getData());
+
             Compress gzipCompress = new GzipCompress();
             bodyBytes = gzipCompress.compress(bodyBytes);
             // compress the bytes

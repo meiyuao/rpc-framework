@@ -3,6 +3,8 @@ package org.whu.mya.serialize.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.whu.mya.remoting.dto.RpcRequest;
+import org.whu.mya.remoting.dto.RpcResponce;
 import org.whu.mya.serialize.Serializer;
 
 import java.io.ByteArrayInputStream;
@@ -10,11 +12,15 @@ import java.io.ByteArrayOutputStream;
 
 public class KryoSerializer implements Serializer {
 
+    // Kryo is not thread safe. Each thread should have its own Kryo, Input, and Output instances.
     private final ThreadLocal<Kryo> kryoThreadLocal = new ThreadLocal<Kryo>(){
         @Override
         protected Kryo initialValue() {
             Kryo kryo = new Kryo();
-            kryo.setRegistrationRequired(false);
+//            kryo.register(RpcRequest.class);
+//            kryo.register(RpcResponce.class);
+//            kryo.setRegistrationRequired(true); // 建议设置为true，必须提前注册序列化的对象类型
+
             return kryo;
         }
     };

@@ -6,6 +6,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.whu.mya.compress.Compress;
 import org.whu.mya.compress.gzip.GzipCompress;
 import org.whu.mya.enums.SerializationTypeEnum;
+import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.remoting.constants.RpcConstants;
 import org.whu.mya.remoting.dto.RpcMessage;
 import org.whu.mya.remoting.dto.RpcRequest;
@@ -82,20 +83,19 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
             if (bodyLength > 0) {
                 byte[] bs = new byte[bodyLength];
                 in.readBytes(bs);
+                // decompress
                 Compress compress = new GzipCompress();
                 bs = compress.decompress(bs);
+                // deserialize
                 Serializer serializer = null;
-                if (codecType == SerializationTypeEnum.KRYO.getCode())
-                    serializer = new KryoSerializer();
-                else if (codecType == SerializationTypeEnum.PROTOSTUFF.getCode())
-                    serializer = new ProtostuffSerializer();
+                String codecName = SerializationTypeEnum.getName(codecType);
+                serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(codecName);
                 if (messagetType == RpcConstants.REQUEST_TYPE) {
                     rpcMessage.setData(serializer.deserialize(bs, RpcRequest.class));
                 }
                 if (messagetType == RpcConstants.RESPONSE_TYPE) {
                     rpcMessage.setData(serializer.deserialize(bs, RpcResponce.class));
                 }
-
             }
         }
         return rpcMessage;
