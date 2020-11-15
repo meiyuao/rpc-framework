@@ -1,0 +1,53 @@
+package org.whu.mya.registry.zk.util;
+
+import org.apache.curator.RetryPolicy;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.zookeeper.CreateMode;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+public final class CuratorUtils {
+    private static final int BASE_SLEEP_TIME = 1000;
+    private static final int MAX_RETRIES = 3;
+    public static final String ZK_REGISTER_ROOT_PATH = "/my-rpc";
+    private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
+
+    private static  CuratorFramework zkClient;
+    private static String defaultZookeeperAddress = "192.168.200.176:2181";
+    private CuratorUtils(){
+
+    }
+
+
+    public static CuratorFramework getZkClient() {
+
+        if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
+            return zkClient;
+        }
+
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(BASE_SLEEP_TIME, MAX_RETRIES);
+        zkClient = CuratorFrameworkFactory.builder()
+                .connectString(defaultZookeeperAddress)
+                .retryPolicy(retryPolicy)
+                .build();
+        zkClient.start();
+        return zkClient;
+    }
+
+    public static void createPersistentNode(CuratorFramework zkClient, String servicePath) {
+        try {
+            if (REGISTERED_PATH_SET.contains(servicePath) || zkClient.checkExists().forPath(servicePath) != null) {
+                System.out.println("已经注册了");
+            }else {
+                zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(servicePath);
+            }
+            REGISTERED_PATH_SET.add(servicePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

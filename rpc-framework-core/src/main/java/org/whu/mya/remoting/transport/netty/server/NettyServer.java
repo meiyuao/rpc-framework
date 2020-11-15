@@ -24,7 +24,7 @@ public class NettyServer {
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(SerivceProviderImpl.class);
 
     public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
-        serviceProvider.addService(service, rpcServiceProperties);
+        serviceProvider.publishService(service, rpcServiceProperties);
     }
 
 

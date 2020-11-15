@@ -4,9 +4,12 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/rpc-framework-core/pom.xml" />
+        <option value="$PROJECT_DIR$/example-client/pom.xml" />
+        <option value="$PROJECT_DIR$/example-server/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-framework-common/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-framework-service/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11 (2)" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="false" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

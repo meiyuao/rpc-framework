@@ -10,4 +10,5 @@ public interface ServiceProvider {
 
     Object getService(RpcServiceProperties rpcServiceProperties);
 
+    void publishService(Object service, RpcServiceProperties rpcServiceProperties);
 }
