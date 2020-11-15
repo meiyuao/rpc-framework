@@ -45,6 +45,20 @@
         </dependency>
         <!--序列化工具 kryo protostuff-->
 
+        <!--Zookeeper工具 curator -->
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>${curator-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>${curator-version}</version>
+        </dependency>
+        <!--Zookeeper工具 -->
+
+
 
     </dependencies>
 

@@ -10,8 +10,6 @@ import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.remoting.constants.RpcConstants;
 import org.whu.mya.remoting.dto.RpcMessage;
 import org.whu.mya.serialize.Serializer;
-import org.whu.mya.serialize.kryo.KryoSerializer;
-import org.whu.mya.serialize.protostuff.ProtostuffSerializer;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,15 +35,16 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
         // if message if not heartbeat message, fullLength = head length + body length
         if (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE
             && messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
+
             // serialize the body
             Serializer serializer = null;
             String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
             serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(codecName);
             bodyBytes = serializer.serialize(rpcMessage.getData());
 
+            // compress the bytes
             Compress gzipCompress = new GzipCompress();
             bodyBytes = gzipCompress.compress(bodyBytes);
-            // compress the bytes
 
             fullLength += bodyBytes.length;
         }
@@ -58,9 +57,5 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
         out.writeInt(fullLength);
         out.writerIndex(writeIndex);
 
-//        Serializer kryoSerializer = new KryoSerializer();
-//        System.out.println(kryoSerializer.serialize(rpcMessage).length);
-//        System.out.println(kryoSerializer.serialize(rpcMessage).toString());
-//        out.writeBytes(kryoSerializer.serialize(rpcMessage));
     }
 }
