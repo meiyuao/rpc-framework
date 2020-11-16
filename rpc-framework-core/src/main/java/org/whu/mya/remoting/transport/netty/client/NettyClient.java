@@ -39,7 +39,9 @@ public class NettyClient {
      */
     @SneakyThrows
     public Channel doConnect(final InetSocketAddress inetSocketAddress) {
+        System.out.println("尝试连接"+inetSocketAddress.getAddress());
         final ChannelFuture future = bootstrap.connect(inetSocketAddress).sync();
+        System.out.println("尝试成功");
 
         future.addListener(new ChannelFutureListener() {
             public void operationComplete(ChannelFuture channelFuture) throws Exception {

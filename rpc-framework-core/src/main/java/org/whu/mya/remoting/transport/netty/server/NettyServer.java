@@ -20,7 +20,7 @@ import org.whu.mya.remoting.transport.netty.codec.RpcMessageEncoder;
 import java.net.InetAddress;
 
 public class NettyServer {
-    public static final int PORT = 9998;
+    public static final int PORT = 9999;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(SerivceProviderImpl.class);
 
     public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
@@ -32,7 +32,6 @@ public class NettyServer {
     public void start() {
         // 动态获取当前主机ip
         String host = InetAddress.getLocalHost().getHostAddress();
-
         NioEventLoopGroup boosGroup = new NioEventLoopGroup(1);
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -60,7 +59,7 @@ public class NettyServer {
                     });
 
             // 绑定端口，同步等待绑定成功
-            ChannelFuture future = serverBootstrap.bind("127.0.0.1", PORT).sync();
+            ChannelFuture future = serverBootstrap.bind(host, PORT).sync();
             if (future.isSuccess()) System.out.println("服务端已启动"+future.channel().localAddress());
             // 等待服务端监听端口关闭
             future.channel().closeFuture().sync();

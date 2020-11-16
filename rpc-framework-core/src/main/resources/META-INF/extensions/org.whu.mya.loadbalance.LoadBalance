@@ -1,0 +1,2 @@
+random=org.whu.mya.loadbalance.loadbalancer.RandomLoadBalance
+consistentHash=org.whu.mya.loadbalance.loadbalancer.ConsistentHashLoadBalance

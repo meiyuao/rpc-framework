@@ -48,7 +48,7 @@ public class SerivceProviderImpl implements ServiceProvider {
             String serviceName = service.getClass().getInterfaces()[0].getCanonicalName();
             rpcServiceProperties.setServiceName(serviceName);
             this.addService(service, rpcServiceProperties);
-//            serviceRegistry.registerService(rpcServiceProperties.getServiceName(), new InetSocketAddress(host, NettyServer.PORT));
+            serviceRegistry.registerService(rpcServiceProperties.getServiceName(), new InetSocketAddress(host, NettyServer.PORT));
 
         } catch (UnknownHostException e) {
             e.printStackTrace();

@@ -1,6 +1,8 @@
 package org.whu.mya.registry.zk;
 
 import org.apache.curator.framework.CuratorFramework;
+import org.whu.mya.extension.ExtensionLoader;
+import org.whu.mya.loadbalance.LoadBalance;
 import org.whu.mya.registry.ServiceDiscovery;
 import org.whu.mya.registry.zk.util.CuratorUtils;
 
@@ -8,6 +10,14 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 public class ZkServiceDiscovery implements ServiceDiscovery {
+
+    private final LoadBalance loadBalance;
+
+    public ZkServiceDiscovery() {
+        this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class)
+                .getExtension("random");
+    }
+
     @Override
     public InetSocketAddress lookupService(String rpcServiceName) {
         CuratorFramework zkClient = CuratorUtils.getZkClient();
@@ -18,7 +28,8 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
         }
 
         // 负载均衡选择服务器
-        String targetServiceUrl = serviceUrlList.get(0);
+        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcServiceName);
+        System.out.println("负载均衡选择的服务器为：" + targetServiceUrl);
 
         String[] socketAddressArray = targetServiceUrl.split(":");
         String host = socketAddressArray[0];

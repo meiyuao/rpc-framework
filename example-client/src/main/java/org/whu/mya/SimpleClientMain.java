@@ -14,16 +14,11 @@ public class SimpleClientMain {
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
 
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
            String hello =  helloService.hello(new Hello("111", "" + i));
             System.out.println(hello);
-
         }
-//        System.out.println(hello);
-//        Thread.sleep(4000);
-//
-//        String hello1 = helloService.hello(new Hello("111", "222"));
-//        System.out.println(hello1);
+
 
     }
 }

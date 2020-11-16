@@ -7,7 +7,9 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import org.whu.mya.enums.CompressTypeEnum;
 import org.whu.mya.enums.SerializationTypeEnum;
+import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.factory.SingletonFactory;
+import org.whu.mya.registry.ServiceDiscovery;
 import org.whu.mya.remoting.constants.RpcConstants;
 import org.whu.mya.remoting.dto.RpcMessage;
 import org.whu.mya.remoting.dto.RpcRequest;
@@ -21,17 +23,27 @@ import java.util.concurrent.CompletableFuture;
 public class NettyClientTransport implements ClientTransport {
     private final ChannelProvider channelProvider;
     private final UnprocessedRequests unprocessedRequests;
+    private final ServiceDiscovery serviceDiscovery;
+    @Override
+    protected void finalize() throws Throwable {
+
+    }
 
     public NettyClientTransport() {
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
+        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
     }
 
     public CompletableFuture<RpcResponce<Object>> sendRpcRequest(RpcRequest request) {
         // build return value
         CompletableFuture<RpcResponce<Object>> resultFuture = new CompletableFuture<>();
 
-        InetSocketAddress inetSocketAddress= new InetSocketAddress("127.0.0.1", 9998);
+//        InetSocketAddress inetSocketAddress= new InetSocketAddress("192.168.61.55", 9998);
+//        InetSocketAddress inetSocketAddress= new InetSocketAddress("127.0.0.1", 9998);
+
+        String rpcServiceName = request.toRpcProperties().toRpcServiceName();
+        InetSocketAddress inetSocketAddress= serviceDiscovery.lookupService(rpcServiceName);
 
         Channel channel = channelProvider.get(inetSocketAddress);
 
