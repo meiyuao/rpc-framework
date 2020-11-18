@@ -14,6 +14,8 @@ public class RpcRequestHandler {
     }
 
     public Object handle(RpcRequest request) {
+
+
         Object service = serviceProvider.getService(request.toRpcProperties());
         return invokeTargetMethod(request, service);
     }

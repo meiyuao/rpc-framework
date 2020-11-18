@@ -1,5 +1,6 @@
 package org.whu.mya.proxy;
 
+import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.remoting.dto.RpcRequest;
 import org.whu.mya.remoting.dto.RpcResponce;
 import org.whu.mya.remoting.transport.ClientTransport;
@@ -14,9 +15,16 @@ import java.util.concurrent.CompletableFuture;
 public class RpcClientProxy implements InvocationHandler {
 
     private final ClientTransport clientTransport;
+    private final RpcServiceProperties serviceProperties;
 
     public RpcClientProxy() {
         clientTransport = new NettyClientTransport();
+        serviceProperties = RpcServiceProperties.builder().group("").build();
+    }
+
+    public RpcClientProxy(RpcServiceProperties properties) {
+        clientTransport = new NettyClientTransport();
+        serviceProperties = RpcServiceProperties.builder().group(properties.getGroup()).build();
     }
 
     /**
@@ -40,6 +48,7 @@ public class RpcClientProxy implements InvocationHandler {
                 .interfaceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
                 .requestId(UUID.randomUUID().toString())
+                .group(serviceProperties.getGroup())
                 .build();
 
         CompletableFuture<RpcResponce<Object>> future = (CompletableFuture<RpcResponce<Object>>) clientTransport.sendRpcRequest(rpcRequest);

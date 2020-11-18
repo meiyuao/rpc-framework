@@ -20,7 +20,7 @@ import org.whu.mya.remoting.transport.netty.codec.RpcMessageEncoder;
 import java.net.InetAddress;
 
 public class NettyServer {
-    public static final int PORT = 9999;
+    public static final int PORT = 9998;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(SerivceProviderImpl.class);
 
     public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {

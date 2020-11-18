@@ -25,7 +25,8 @@ public class SerivceProviderImpl implements ServiceProvider {
     @Override
     public void addService(Object service, RpcServiceProperties rpcServiceProperties) {
         System.out.println("服务：" +service.getClass().getInterfaces()[0].getCanonicalName() + " 注册完成");
-        serviceMap.put(service.getClass().getInterfaces()[0].getCanonicalName(), service);
+        String serviceName = rpcServiceProperties.toRpcServiceName();
+        serviceMap.put(serviceName, service);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class SerivceProviderImpl implements ServiceProvider {
 
     @Override
     public Object getService(RpcServiceProperties rpcServiceProperties) {
-        Object service = serviceMap.get(rpcServiceProperties.getServiceName());
+        Object service = serviceMap.get(rpcServiceProperties.toRpcServiceName());
         if (null == service) throw new RuntimeException();
         return service;
     }
@@ -48,7 +49,7 @@ public class SerivceProviderImpl implements ServiceProvider {
             String serviceName = service.getClass().getInterfaces()[0].getCanonicalName();
             rpcServiceProperties.setServiceName(serviceName);
             this.addService(service, rpcServiceProperties);
-            serviceRegistry.registerService(rpcServiceProperties.getServiceName(), new InetSocketAddress(host, NettyServer.PORT));
+            serviceRegistry.registerService(rpcServiceProperties.toRpcServiceName(), new InetSocketAddress(host, NettyServer.PORT));
 
         } catch (UnknownHostException e) {
             e.printStackTrace();

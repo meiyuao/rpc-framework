@@ -22,7 +22,7 @@ public class RpcRequest  {
 
 
     public RpcServiceProperties toRpcProperties() {
-        return RpcServiceProperties.builder().serviceName(this.getInterfaceName())
+        return RpcServiceProperties.builder().serviceName(this.getInterfaceName()).group(this.getGroup())
                 .build();
     }
 }

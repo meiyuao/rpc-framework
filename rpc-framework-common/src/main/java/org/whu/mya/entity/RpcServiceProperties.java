@@ -10,9 +10,10 @@ import lombok.*;
 @NoArgsConstructor
 public class RpcServiceProperties {
 
+    private String group; // 当接口有多个实现时，用group区分
     private String serviceName;
 
     public String toRpcServiceName() {
-        return this.getServiceName();
+        return this.getServiceName() + this.getGroup();
     }
 }
