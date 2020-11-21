@@ -11,14 +11,16 @@ public class SimpleClientMain {
     public static void main(String[] args) throws Throwable {
         ClientTransport clientTransport = new NettyClientTransport();
 
-        RpcClientProxy rpcClientProxy = new RpcClientProxy(RpcServiceProperties.builder().group("group1").build());
+        RpcClientProxy rpcClientProxy = new RpcClientProxy(RpcServiceProperties.builder().group("group2").build());
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
 
 
-        for (int i = 0; i < 1; i++) {
-           String hello =  helloService.hello(new Hello("111", "" + i));
+        for (int i = 0; i < 10; i++) {
+//            Thread.sleep(1000);
+            String hello =  helloService.hello(new Hello("111", "" + i));
             System.out.println(hello);
         }
+
 
 
     }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.mya.com/schema/rpc"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.mya.com/schema/rpc"
+            elementFormDefault="qualified">
+
+    <xsd:complexType name="service-type">
+        <xsd:attribute name="id" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="interface" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="ref" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="group" type="xsd:string">
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="service" type="service-type">
+    </xsd:element>
+
+</xsd:schema>

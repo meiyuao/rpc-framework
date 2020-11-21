@@ -32,6 +32,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("服务端收到数据啦");
+        System.out.println("当前线程："+Thread.currentThread().getId());
         System.out.println((RpcMessage)msg);
         if (msg instanceof RpcMessage) {
             RpcMessage rpcMessage = (RpcMessage) msg;

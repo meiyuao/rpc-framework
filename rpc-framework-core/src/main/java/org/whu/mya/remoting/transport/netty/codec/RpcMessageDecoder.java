@@ -39,6 +39,8 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
 
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+        System.out.println("当前线程："+Thread.currentThread().getId());
+
         if (in.readableBytes() >= RpcConstants.TOTAL_LENGTH) {
             return decodeFrame(in);
         }

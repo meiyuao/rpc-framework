@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="http://www.mya.com/schema/rpc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.mya.com/schema/rpc http://www.mya.com/schema/rpc.xsd">
+
+    <rpc:service id="HelloServiceImpl"  interface="org.whu.mya.service.HelloService"
+                 ref="org.whu.mya.serviceImpl.HelloServiceImpl" group="group1"/>
+
+    <rpc:service id="HelloServiceImpl2" interface="org.whu.mya.service.HelloService"
+                 ref="org.whu.mya.serviceImpl.HelloServiceImpl2" group="group2"/>
+
+</beans>

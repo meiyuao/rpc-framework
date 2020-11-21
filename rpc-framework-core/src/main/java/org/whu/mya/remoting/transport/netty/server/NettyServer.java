@@ -8,8 +8,11 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
 import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.factory.SingletonFactory;
 import org.whu.mya.provider.SerivceProviderImpl;
@@ -23,6 +26,15 @@ public class NettyServer {
     public static final int PORT = 9998;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(SerivceProviderImpl.class);
 
+//    public void registerService(ApplicationContext context) {
+//        String[] beanNames = context.getBeanDefinitionNames();
+//
+//        for (String name : beanNames) {
+//            context.getBean(name);
+////            context.get
+//            serviceProvider.publishService(,RpcServiceProperties.builder().group("group2").build());
+//        }
+//    }
     public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
         serviceProvider.publishService(service, rpcServiceProperties);
     }
@@ -32,12 +44,16 @@ public class NettyServer {
     public void start() {
         // 动态获取当前主机ip
         String host = InetAddress.getLocalHost().getHostAddress();
-        NioEventLoopGroup boosGroup = new NioEventLoopGroup(1);
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup(2);
+
+        DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
+                Runtime.getRuntime().availableProcessors() * 2);
+
 
         try{
             ServerBootstrap serverBootstrap = new ServerBootstrap();
-            serverBootstrap.group(boosGroup, workerGroup)  //option主要是针对boss线程组，child主要是针对worker线程组
+            serverBootstrap.group(bossGroup, workerGroup)  //option主要是针对boss线程组，child主要是针对worker线程组
                     .channel(NioServerSocketChannel.class)
                     //表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁，服务器处理创建新连接较慢，可以适当调大这个参数
                     .option(ChannelOption.SO_BACKLOG, 128)
@@ -47,14 +63,12 @@ public class NettyServer {
                     // 是否开启 TCP 底层心跳机制
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     // 当客户端第一次进行请求的时候才会进行初始化
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                    .childHandler(new ChannelInitializer<NioSocketChannel>() {
+                        protected void initChannel(NioSocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             pipeline.addLast(new RpcMessageDecoder());
-
-                            pipeline.addLast(new NettyServerHandler());
                             pipeline.addLast(new RpcMessageEncoder());
-
+                            pipeline.addLast(serviceHandlerGroup, new NettyServerHandler());
                         }
                     });
 
@@ -66,8 +80,9 @@ public class NettyServer {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            boosGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
+            serviceHandlerGroup.shutdownGracefully();
         }
 
     }
