@@ -1,11 +1,11 @@
-package org.whu.mya.spring;
+package org.whu.mya.spring.schema;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-import org.whu.mya.spring.beanParser.ServiceBeanDefinitionParser;
 
 public class RpcSpaceHandler extends NamespaceHandlerSupport {
     @Override
     public void init() {
         registerBeanDefinitionParser("service", new ServiceBeanDefinitionParser());
+        registerBeanDefinitionParser("registry", new RegistryBeanDefinitionParser());
     }
 }

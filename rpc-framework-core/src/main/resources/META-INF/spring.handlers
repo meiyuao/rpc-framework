@@ -1,1 +1,1 @@
-http\://www.mya.com/schema/rpc=org.whu.mya.spring.RpcSpaceHandler
+http\://www.mya.com/schema/rpc=org.whu.mya.spring.schema.RpcSpaceHandler

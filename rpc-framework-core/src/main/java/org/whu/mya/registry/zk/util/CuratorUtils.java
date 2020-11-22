@@ -6,6 +6,8 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
+import org.whu.mya.spring.config.RegistryConfig;
+import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,9 @@ public final class CuratorUtils {
     public static final String ZK_REGISTER_ROOT_PATH = "/my-rpc";
     private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
     private static final Map<String, List<String>> SERVICE_ADDRESS_MAP = new ConcurrentHashMap<>();
-    private static  CuratorFramework zkClient;
+    private static CuratorFramework zkClient;
     private static String defaultZookeeperAddress = "192.168.200.176:2181";
+
     private CuratorUtils(){
 
     }
@@ -29,6 +32,11 @@ public final class CuratorUtils {
 
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
             return zkClient;
+        }
+
+        RegistryConfig registry = (RegistryConfig) MyApplicationContextUtil.getBean("registry");
+        if (registry != null) {
+            defaultZookeeperAddress = registry.getAddress() + ":" + registry.getPort();
         }
 
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(BASE_SLEEP_TIME, MAX_RETRIES);

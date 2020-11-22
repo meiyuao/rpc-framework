@@ -1,7 +1,7 @@
 package org.whu.mya.remoting.handler;
 
 import org.whu.mya.factory.SingletonFactory;
-import org.whu.mya.provider.SerivceProviderImpl;
+import org.whu.mya.provider.ServiceProviderImpl;
 import org.whu.mya.provider.ServiceProvider;
 import org.whu.mya.remoting.dto.RpcRequest;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 public class RpcRequestHandler {
     private final ServiceProvider serviceProvider;
     public RpcRequestHandler() {
-        serviceProvider = SingletonFactory.getInstance(SerivceProviderImpl.class);
+        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
 
     public Object handle(RpcRequest request) {

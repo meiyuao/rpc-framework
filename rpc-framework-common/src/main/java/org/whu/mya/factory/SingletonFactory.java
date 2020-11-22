@@ -10,6 +10,10 @@ import java.util.Map;
 public final class SingletonFactory {
     private static final Map<String, Object> OBJECT_MAP = new HashMap<>();
 
+    public static void put(Object object) {
+        if (!OBJECT_MAP.containsKey(object.getClass().toString()))
+            OBJECT_MAP.put(object.getClass().toString(), object);
+    }
     public static <T> T getInstance(Class<T> clazz) {
         String key = clazz.toString();
         Object instance = OBJECT_MAP.get(key);

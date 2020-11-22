@@ -1,5 +1,7 @@
 package org.whu.mya.provider;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.registry.ServiceRegistry;
@@ -11,20 +13,21 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SerivceProviderImpl implements ServiceProvider {
+public class ServiceProviderImpl implements ServiceProvider {
     private final Map<String, Object> serviceMap;
     private final ServiceRegistry serviceRegistry;
 
-    public SerivceProviderImpl() {
+
+    public ServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension("zk");
     }
 
 
 
+
     @Override
     public void addService(Object service, RpcServiceProperties rpcServiceProperties) {
-        System.out.println("服务：" +service.getClass().getInterfaces()[0].getCanonicalName() + " 注册完成");
         String serviceName = rpcServiceProperties.toRpcServiceName();
         serviceMap.put(serviceName, service);
     }
@@ -50,7 +53,7 @@ public class SerivceProviderImpl implements ServiceProvider {
             rpcServiceProperties.setServiceName(serviceName);
             this.addService(service, rpcServiceProperties);
             serviceRegistry.registerService(rpcServiceProperties.toRpcServiceName(), new InetSocketAddress(host, NettyServer.PORT));
-
+            System.out.println("服务：" +service.getClass().getCanonicalName() + " 注册完成");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

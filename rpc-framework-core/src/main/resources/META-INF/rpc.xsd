@@ -15,7 +15,21 @@
         </xsd:attribute>
     </xsd:complexType>
 
+    <xsd:complexType name="registry-type">
+        <xsd:attribute name="id" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="address" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="port" type="xsd:int">
+        </xsd:attribute>
+    </xsd:complexType>
+
     <xsd:element name="service" type="service-type">
     </xsd:element>
+
+    <xsd:element name="registry" type="registry-type">
+    </xsd:element>
+
+
 
 </xsd:schema>

@@ -6,38 +6,46 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.factory.SingletonFactory;
-import org.whu.mya.provider.SerivceProviderImpl;
+import org.whu.mya.provider.ServiceProviderImpl;
 import org.whu.mya.provider.ServiceProvider;
 import org.whu.mya.remoting.transport.netty.codec.RpcMessageDecoder;
 import org.whu.mya.remoting.transport.netty.codec.RpcMessageEncoder;
+import org.whu.mya.spring.config.ServiceBean;
+import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.net.InetAddress;
 
 public class NettyServer {
     public static final int PORT = 9998;
-    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(SerivceProviderImpl.class);
+    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
 
-//    public void registerService(ApplicationContext context) {
-//        String[] beanNames = context.getBeanDefinitionNames();
-//
-//        for (String name : beanNames) {
-//            context.getBean(name);
-////            context.get
-//            serviceProvider.publishService(,RpcServiceProperties.builder().group("group2").build());
-//        }
-//    }
-    public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
-        serviceProvider.publishService(service, rpcServiceProperties);
+    public void registerService() {
+        ApplicationContext context = MyApplicationContextUtil.getContext();
+        String[] beanNames = context.getBeanDefinitionNames();
+        for (String name : beanNames) {
+            try {
+                Object obj =  context.getBean(name);
+                if (obj instanceof ServiceBean) {
+                    ServiceBean serviceBean = (ServiceBean) obj;
+                    serviceProvider.publishService(
+                            ClassLoader.getSystemClassLoader().loadClass(serviceBean.getRef()).getDeclaredConstructor().newInstance()
+                            , RpcServiceProperties.builder().group(serviceBean.getGroup()).build());
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+//    public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
+//        serviceProvider.publishService(service, rpcServiceProperties);
+//    }
 
 
     @SneakyThrows
@@ -75,6 +83,8 @@ public class NettyServer {
             // 绑定端口，同步等待绑定成功
             ChannelFuture future = serverBootstrap.bind(host, PORT).sync();
             if (future.isSuccess()) System.out.println("服务端已启动"+future.channel().localAddress());
+            System.out.println("开始注册服务:");
+            registerService();
             // 等待服务端监听端口关闭
             future.channel().closeFuture().sync();
         }catch (Exception e){
