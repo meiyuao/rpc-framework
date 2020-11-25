@@ -13,6 +13,8 @@ import org.whu.mya.remoting.dto.RpcResponce;
 import org.whu.mya.remoting.handler.RpcRequestHandler;
 import org.whu.mya.serialize.Serializer;
 import org.whu.mya.serialize.kryo.KryoSerializer;
+import org.whu.mya.spring.config.SerializeConfig;
+import org.whu.mya.util.MyApplicationContextUtil;
 
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
@@ -44,10 +46,17 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 RpcRequest request = (RpcRequest) rpcMessage.getData();
                 Object result = rpcRequestHandler.handle(request);
                 rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
-                rpcMessage.setCodec(SerializationTypeEnum.PROTOSTUFF.getCode());
+
+                // set codec
+                SerializeConfig serializeConfig = (SerializeConfig) MyApplicationContextUtil.getBean("serialize");
+                if (serializeConfig != null)
+                    rpcMessage.setCodec(SerializationTypeEnum.getCode(serializeConfig.getType()));
+                else
+                    rpcMessage.setCodec(SerializationTypeEnum.DEFAULT.getCode());
+
                 if (ctx.channel().isActive() && ctx.channel().isWritable()) {
-                    RpcResponce<Object> rpcResponce = RpcResponce.success(result, request.getRequestId());
-                    rpcMessage.setData(rpcResponce);
+                    RpcResponce<Object> rpcResponse = RpcResponce.success(result, request.getRequestId());
+                    rpcMessage.setData(rpcResponse);
                 }
             }
             ctx.channel().writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);

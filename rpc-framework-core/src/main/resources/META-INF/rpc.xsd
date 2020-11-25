@@ -15,6 +15,15 @@
         </xsd:attribute>
     </xsd:complexType>
 
+    <xsd:complexType name="reference-type">
+        <xsd:attribute name="id" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="interface" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="group" type="xsd:string">
+        </xsd:attribute>
+    </xsd:complexType>
+
     <xsd:complexType name="registry-type">
         <xsd:attribute name="id" type="xsd:string">
         </xsd:attribute>
@@ -24,12 +33,23 @@
         </xsd:attribute>
     </xsd:complexType>
 
+    <xsd:complexType name="serialize-type">
+        <xsd:attribute name="id" type="xsd:string">
+        </xsd:attribute>
+        <xsd:attribute name="type" type="xsd:string">
+        </xsd:attribute>
+    </xsd:complexType>
+
     <xsd:element name="service" type="service-type">
+    </xsd:element>
+
+    <xsd:element name="reference" type="reference-type">
+    </xsd:element>
+
+    <xsd:element name="serialize" type="serialize-type">
     </xsd:element>
 
     <xsd:element name="registry" type="registry-type">
     </xsd:element>
-
-
 
 </xsd:schema>

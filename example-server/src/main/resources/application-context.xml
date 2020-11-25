@@ -11,5 +11,9 @@
     <rpc:service id="HelloServiceImpl2" interface="org.whu.mya.service.HelloService"
                  ref="org.whu.mya.serviceImpl.HelloServiceImpl2" group="group2"/>
 
-    <rpc:registry id="registry" address="192.168.200.176" port="2181" />
+    <rpc:registry id="registry" address="192.168.200.176" port="2181"/>
+
+    <rpc:serialize id="serialize" type="protostuff"/>
+
+    <bean class="org.whu.mya.spring.BeanProcessor"/>
 </beans>
