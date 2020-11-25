@@ -27,12 +27,13 @@ public class SimpleClientMain {
 ////            Thread.sleep(1000);
 //            String hello =  helloService.hello(new Hello("111", "" + i));
 //            System.out.println(hello);
+//            System.out.println(hello);
 //        }
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-context.xml"});
 //
-        MyApplicationContextUtil.setApplicationContext(context);
+//        MyApplicationContextUtil.setApplicationContext(context);
 
-//        HelloService helloService1 = HelloService.class.cast(context.getBean("HelloService1")) ;
-//        helloService1.hello(new Hello());
+        HelloService helloService1 = (HelloService) context.getBean("HelloService1");
+        helloService1.hello(new Hello("111", "`"));
 }
 }

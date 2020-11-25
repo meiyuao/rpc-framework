@@ -9,10 +9,10 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-<!--    <rpc:reference id="HelloService1" interface="org.whu.mya.service.HelloService" group="group1"/>-->
-<!--    <rpc:reference id="HelloService2" interface="org.whu.mya.service.HelloService" group="group2"/>-->
-    <context:component-scan base-package="org.whu.mya"/>
+    <rpc:reference id="HelloService1" interface="org.whu.mya.service.HelloService" group="group1"/>
+    <rpc:reference id="HelloService2" interface="org.whu.mya.service.HelloService" group="group2"/>
+<!--    <context:component-scan base-package="org.whu.mya"/>-->
+<!--    <bean class="org.whu.mya.spring.BeanProcessor"/>-->
 
-    <bean class="org.whu.mya.spring.BeanProcessor"/>
 
 </beans>

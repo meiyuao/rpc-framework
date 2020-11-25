@@ -1,6 +1,8 @@
 package org.whu.mya.spring.schema;
 
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.w3c.dom.Element;
 import org.whu.mya.factory.SingletonFactory;
@@ -17,13 +19,35 @@ public class ReferenceBeanDefinitionParser extends AbstractSingleBeanDefinitionP
 
     @Override
     protected Class<?> getBeanClass(Element element) {
-        System.out.println("hahah");
-        return Object.class;
+        return ReferenceBean.class;
     }
 
     @Override
     protected void doParse(Element element, BeanDefinitionBuilder builder) {
-        builder.addPropertyValue("xx","dd");
+////        builder.addPropertyValue("xx","dd");
+//        String interfaces = element.getAttribute("interface");
+//        Class clazz = null;
+//        try {
+//            clazz = Class.forName(interfaces);
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//        GenericBeanDefinition beanDefinition = (GenericBeanDefinition) builder.getRawBeanDefinition();
+//
+//        System.out.println(beanDefinition.getBeanClass());
+////        beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(clazz);
+//        System.out.println(beanDefinition.getConstructorArgumentValues());
+//        beanDefinition.setBeanClass(clazz);
+//        System.out.println(beanDefinition.getBeanClass());
+//
+        try {
+            builder.addPropertyValue("clazz", Class.forName(element.getAttribute("interface")));
+            builder.addPropertyValue("group", element.getAttribute("group"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+//
 //        builder.addPropertyValue("interfaceName", element.getAttribute("interface"));
 //        builder.addPropertyValue("group", element.getAttribute("group"));
     }
