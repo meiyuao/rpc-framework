@@ -14,6 +14,6 @@ public class RpcServiceProperties {
     private String serviceName;
 
     public String toRpcServiceName() {
-        return this.getServiceName() + this.getGroup();
+        return this.getServiceName() + ":" + this.getGroup();
     }
 }

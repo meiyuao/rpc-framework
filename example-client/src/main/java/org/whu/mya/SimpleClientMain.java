@@ -31,9 +31,9 @@ public class SimpleClientMain {
 //        }
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-context.xml"});
 //
-//        MyApplicationContextUtil.setApplicationContext(context);
-
-        HelloService helloService1 = (HelloService) context.getBean("HelloService1");
-        helloService1.hello(new Hello("111", "`"));
+        MyApplicationContextUtil.setApplicationContext(context);
+        System.out.println(context.getBean("HelloService1"));
+//        HelloService helloService1 = (HelloService) context.getBean("HelloService1");
+//        helloService1.hello(new Hello("111", "`"));
 }
 }

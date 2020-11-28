@@ -41,6 +41,7 @@ public class ReferenceBeanDefinitionParser extends AbstractSingleBeanDefinitionP
 //        beanDefinition.setBeanClass(clazz);
 //        System.out.println(beanDefinition.getBeanClass());
 //
+
         try {
             builder.addPropertyValue("clazz", Class.forName(element.getAttribute("interface")));
             builder.addPropertyValue("group", element.getAttribute("group"));

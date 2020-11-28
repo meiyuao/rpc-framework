@@ -31,6 +31,8 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         super.channelActive(ctx);
     }
 
+
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("服务端收到数据啦");

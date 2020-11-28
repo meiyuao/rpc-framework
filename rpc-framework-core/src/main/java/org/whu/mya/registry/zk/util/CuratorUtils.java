@@ -53,7 +53,7 @@ public final class CuratorUtils {
             if (REGISTERED_PATH_SET.contains(servicePath) || zkClient.checkExists().forPath(servicePath) != null) {
                 System.out.println("已经注册了");
             }else {
-                zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(servicePath);
+                zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(servicePath);
             }
             REGISTERED_PATH_SET.add(servicePath);
         } catch (Exception e) {
@@ -68,6 +68,7 @@ public final class CuratorUtils {
         List<String> res = null;
         String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         try {
+            System.out.println(servicePath);
             res = zkClient.getChildren().forPath(servicePath);
             SERVICE_ADDRESS_MAP.putIfAbsent(rpcServiceName, res);
 

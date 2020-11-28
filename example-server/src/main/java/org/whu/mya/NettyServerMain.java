@@ -11,21 +11,20 @@ import org.whu.mya.spring.config.RegistryConfig;
 import org.whu.mya.spring.config.ServiceBean;
 import org.whu.mya.util.MyApplicationContextUtil;
 
-@ComponentScan("org.whu.mya")
 public class NettyServerMain {
 
     public static void main(String[] args) throws Exception {
 
 
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"application-context.xml"});
-
         MyApplicationContextUtil.setApplicationContext(context);
 
-
-
-        NettyServer nettyServer = new NettyServer();
+        NettyServer nettyServer = new NettyServer(context);
         nettyServer.start();
 
+        System.out.println("heihei");
 
+        Thread.sleep(3000);
+        nettyServer.closeServer();
     }
 }

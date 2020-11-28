@@ -13,6 +13,7 @@
     <rpc:reference id="HelloService2" interface="org.whu.mya.service.HelloService" group="group2"/>
 <!--    <context:component-scan base-package="org.whu.mya"/>-->
 <!--    <bean class="org.whu.mya.spring.BeanProcessor"/>-->
+    <rpc:registry id="registry" address="192.168.200.176" port="2181"/>
 
 
 </beans>

@@ -1,14 +1,12 @@
 package org.whu.mya.remoting.transport.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.FutureListener;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.whu.mya.entity.RpcServiceProperties;
@@ -21,35 +19,31 @@ import org.whu.mya.spring.config.ServiceBean;
 import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.net.InetAddress;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NettyServer {
     public static final int PORT = 9998;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+    private Channel serverChannel;
+    private ApplicationContext context;
 
-    public void registerService() {
-        ApplicationContext context = MyApplicationContextUtil.getContext();
-        String[] beanNames = context.getBeanDefinitionNames();
-        for (String name : beanNames) {
-            try {
-                Object obj =  context.getBean(name);
-                if (obj instanceof ServiceBean) {
-                    ServiceBean serviceBean = (ServiceBean) obj;
-                    serviceProvider.publishService(
-                            ClassLoader.getSystemClassLoader().loadClass(serviceBean.getRef()).getDeclaredConstructor().newInstance()
-                            , RpcServiceProperties.builder().group(serviceBean.getGroup()).build());
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
+    public NettyServer() {}
+    public NettyServer(ApplicationContext ctx) {
+        this.context = ctx;
+    }
+
+    public void closeServer() {
+        if (serverChannel != null) {
+            serverChannel.close();
+            serverChannel = null;
         }
     }
-//    public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
-//        serviceProvider.publishService(service, rpcServiceProperties);
-//    }
 
 
     @SneakyThrows
     public void start() {
+
         // 动态获取当前主机ip
         String host = InetAddress.getLocalHost().getHostAddress();
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -84,15 +78,33 @@ public class NettyServer {
             ChannelFuture future = serverBootstrap.bind(host, PORT).sync();
             if (future.isSuccess()) System.out.println("服务端已启动"+future.channel().localAddress());
             System.out.println("开始注册服务:");
-            registerService();
+            serviceProvider.registerService(context);
             // 等待服务端监听端口关闭
-            future.channel().closeFuture().sync();
+
+            serverChannel = future.channel();
+
+            future.channel().closeFuture()
+                    .addListener(new ChannelFutureListener() {
+                        @Override
+                        public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                            serviceProvider.unregisterService();
+                            bossGroup.shutdownGracefully();
+                            workerGroup.shutdownGracefully();
+                            serviceHandlerGroup.shutdownGracefully();
+                        }
+                    })
+//            ;
+                    .sync();
+
+
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-            serviceHandlerGroup.shutdownGracefully();
+//            System.out.println("netty server下线啦啊");
+//
+//            bossGroup.shutdownGracefully();
+//            workerGroup.shutdownGracefully();
+//            serviceHandlerGroup.shutdownGracefully();
         }
 
     }

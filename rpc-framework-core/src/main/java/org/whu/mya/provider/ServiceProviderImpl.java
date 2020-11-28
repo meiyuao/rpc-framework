@@ -6,6 +6,7 @@ import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.registry.ServiceRegistry;
 import org.whu.mya.remoting.transport.netty.server.NettyServer;
+import org.whu.mya.spring.config.ServiceBean;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -23,19 +24,55 @@ public class ServiceProviderImpl implements ServiceProvider {
         serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension("zk");
     }
 
+    /**
+     * 注册spring配置的所有service
+     * @param context
+     */
+    @Override
+    public void registerService(ApplicationContext context) {
+        String[] beanNames = context.getBeanDefinitionNames();
+        for (String name : beanNames) {
+            try {
+                Object obj =  context.getBean(name);
+                if (obj instanceof ServiceBean) {
+                    ServiceBean serviceBean = (ServiceBean) obj;
+                    Object service = ClassLoader.getSystemClassLoader().loadClass(serviceBean.getRef()).getDeclaredConstructor().newInstance();
+                    RpcServiceProperties serviceProperties = RpcServiceProperties.builder().group(serviceBean.getGroup()).build();
+                    this.publishService(service, serviceProperties);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void unregisterService() {
+
+        String host = null;
+        try {
+            host = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(host, NettyServer.PORT);
+        for (String serviceName: serviceMap.keySet()) {
+            this.unPublishService(serviceName, inetSocketAddress);
+        }
+    }
 
 
-
+    /**
+     * 用于 add service到 Map
+     * @param service
+     * @param rpcServiceProperties
+     */
     @Override
     public void addService(Object service, RpcServiceProperties rpcServiceProperties) {
         String serviceName = rpcServiceProperties.toRpcServiceName();
         serviceMap.put(serviceName, service);
     }
 
-    @Override
-    public void register(Object service, RpcServiceProperties rpcServiceProperties) {
-        addService(service, rpcServiceProperties);
-    }
 
 
     @Override
@@ -45,6 +82,11 @@ public class ServiceProviderImpl implements ServiceProvider {
         return service;
     }
 
+    /**
+     * 用于发布service到服务注册中心
+     * @param service
+     * @param rpcServiceProperties
+     */
     @Override
     public void publishService(Object service, RpcServiceProperties rpcServiceProperties) {
         try {
@@ -59,4 +101,12 @@ public class ServiceProviderImpl implements ServiceProvider {
         }
 
     }
+
+
+    @Override
+    public void unPublishService(String serviceName, InetSocketAddress inetSocketAddress) {
+        serviceRegistry.unregisterService(serviceName, inetSocketAddress);
+    }
+
+
 }

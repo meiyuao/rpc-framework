@@ -7,6 +7,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.SneakyThrows;
+import org.whu.mya.extension.ExtensionLoader;
+import org.whu.mya.registry.ServiceDiscovery;
 import org.whu.mya.remoting.transport.netty.codec.RpcMessageDecoder;
 import org.whu.mya.remoting.transport.netty.codec.RpcMessageEncoder;
 
@@ -15,8 +17,11 @@ import java.net.InetSocketAddress;
 public class NettyClient {
     private final Bootstrap bootstrap;
     private final EventLoopGroup eventLoopGroup;
+    private final ServiceDiscovery serviceDiscovery;
 
     public NettyClient() {
+        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
+
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup)
