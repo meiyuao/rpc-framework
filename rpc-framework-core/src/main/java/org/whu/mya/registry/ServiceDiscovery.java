@@ -15,5 +15,4 @@ public interface ServiceDiscovery {
      */
     InetSocketAddress lookupService(String rpcServiceName);
 
-    void doSubscribe();
 }

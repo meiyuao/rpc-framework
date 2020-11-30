@@ -23,7 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class NettyServer {
-    public static final int PORT = 9998;
+    public static final int PORT = 9997;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     private Channel serverChannel;
     private ApplicationContext context;

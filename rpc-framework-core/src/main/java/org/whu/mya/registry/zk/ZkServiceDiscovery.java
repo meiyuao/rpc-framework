@@ -1,6 +1,7 @@
 package org.whu.mya.registry.zk;
 
 import org.apache.curator.framework.CuratorFramework;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.extension.ExtensionLoader;
@@ -12,25 +13,30 @@ import org.whu.mya.spring.config.ServiceBean;
 import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ZkServiceDiscovery implements ServiceDiscovery {
+    public static final List<String> interstedServiceNameList = new ArrayList<>();
+    private final Map<String, List<String>> serviceUrlListMap = new ConcurrentHashMap<>();
 
     private final LoadBalance loadBalance;
-    private ApplicationContext context;
     public ZkServiceDiscovery() {
         this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class)
                 .getExtension("random");
-//        doSubscribe();
+        CuratorUtils.doSubscribe();
     }
 
     @Override
     public InetSocketAddress lookupService(String rpcServiceName) {
-        CuratorFramework zkClient = CuratorUtils.getZkClient();
-        List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
+
+        List<String> serviceUrlList = CuratorUtils.getUrls(rpcServiceName);
 
         if (serviceUrlList == null || serviceUrlList.size() == 0) {
-            throw null;
+            throw new RuntimeException();
         }
 
         // 负载均衡选择服务器
@@ -43,24 +49,4 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
         return new InetSocketAddress(host, port);
     }
 
-    @Override
-    public void doSubscribe() {
-        String[] beanNames = context.getBeanDefinitionNames();
-        for (String name : beanNames) {
-            try {
-                Object obj =  context.getBean(name);
-                System.out.println(obj);
-                if (obj instanceof ReferenceBean) {
-                    System.out.println("fdfdfdaasddxx");
-//                    ServiceBean serviceBean = (ServiceBean) obj;
-//                    Object service = ClassLoader.getSystemClassLoader().loadClass(serviceBean.getRef()).getDeclaredConstructor().newInstance();
-//                    RpcServiceProperties serviceProperties = RpcServiceProperties.builder().group(serviceBean.getGroup()).build();
-//
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 }

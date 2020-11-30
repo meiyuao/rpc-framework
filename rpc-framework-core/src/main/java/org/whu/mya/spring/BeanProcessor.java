@@ -4,25 +4,37 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.whu.mya.entity.RpcServiceProperties;
+import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.proxy.RpcClientProxy;
+import org.whu.mya.registry.ServiceDiscovery;
 import org.whu.mya.spring.config.ReferenceBean;
+import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.lang.reflect.Field;
 
 @Component
 public class BeanProcessor implements BeanPostProcessor {
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof ReferenceBean) {
-            System.out.println("ggggg");
-        }
-            return null;
+
+        return null;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-//        System.out.println(beanName);
-//        if (bean instanceof ReferenceBean) {
+        if (bean instanceof ReferenceBean) {
+            ReferenceBean referenceBean = (ReferenceBean) bean;
+
+            MyApplicationContextUtil.addInterestedService(
+                    RpcServiceProperties.builder()
+                            .serviceName(referenceBean.getClazz().getName())
+                            .group(referenceBean.getGroup())
+                            .build()
+                            .toRpcServiceName()
+            );
+
+        }//        if (bean instanceof ReferenceBean) {
 //            System.out.println(bean.getClass());
 //            ReferenceBean referenceBean = (ReferenceBean) bean;
 //            try {

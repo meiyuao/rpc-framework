@@ -26,8 +26,6 @@ public class ReferenceBean<T> implements FactoryBean<T> {
 
     @Override
     public T getObject() throws Exception {
-        System.out.println(clazz);
-        System.out.println(group);
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz},
                 new RpcClientProxy(RpcServiceProperties.builder().group(group).build()));
     }

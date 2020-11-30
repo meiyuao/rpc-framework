@@ -39,9 +39,6 @@ public class NettyClientTransport implements ClientTransport {
         // build return value
         CompletableFuture<RpcResponce<Object>> resultFuture = new CompletableFuture<>();
 
-//        InetSocketAddress inetSocketAddress= new InetSocketAddress("192.168.61.55", 9998);
-//        InetSocketAddress inetSocketAddress= new InetSocketAddress("127.0.0.1", 9998);
-
         String rpcServiceName = request.toRpcProperties().toRpcServiceName();
         InetSocketAddress inetSocketAddress= serviceDiscovery.lookupService(rpcServiceName);
 
