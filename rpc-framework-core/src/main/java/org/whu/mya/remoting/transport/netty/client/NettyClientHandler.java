@@ -50,9 +50,8 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.WRITER_IDLE) {
                 System.out.println("客户端写空闲");
-                Channel channel = channelProvider.get((InetSocketAddress) ctx.channel().remoteAddress());
-                RpcMessage rpcMessage = new RpcMessage();
 
+                RpcMessage rpcMessage = new RpcMessage();
                 // set codec
                 SerializeConfig serializeConfig = (SerializeConfig) MyApplicationContextUtil.getBean("serialize");
                 rpcMessage.setCodec(SerializationTypeEnum.getCode(serializeConfig.getType()));
@@ -60,7 +59,8 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
                 rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                 rpcMessage.setMessageType(RpcConstants.HEARTBEAT_REQUEST_TYPE);
                 rpcMessage.setData(RpcConstants.PING);
-                channel.writeAndFlush(rpcMessage);
+
+                ctx.channel().writeAndFlush(rpcMessage);
             }
             if (state == IdleState.READER_IDLE) {
                 System.out.println("客户端读空闲");
