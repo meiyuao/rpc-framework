@@ -29,5 +29,9 @@ public class SimpleClientMain {
 //        System.out.println(context.getBean("HelloService1"));
         HelloService helloService1 = (HelloService) context.getBean("HelloService1");
         helloService1.hello(new Hello("111", "`"));
-}
+        Thread.sleep(60000);
+        helloService1.hello(new Hello("111", "`"));
+
+
+    }
 }

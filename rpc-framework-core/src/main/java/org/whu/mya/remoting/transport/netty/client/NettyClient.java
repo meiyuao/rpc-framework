@@ -6,6 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.registry.ServiceDiscovery;
@@ -30,6 +31,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline pipeline = socketChannel.pipeline();
+                        pipeline.addLast(new IdleStateHandler(5,5,5));
                         pipeline.addLast(new RpcMessageDecoder());
                         pipeline.addLast(new NettyClientHandler());
                         pipeline.addLast(new RpcMessageEncoder());
@@ -57,11 +59,13 @@ public class NettyClient {
                 }
             }
         });
+
+//        Thread.sleep(3000);
+//        close();
         return future.channel();
     }
 
     public void close() {
         eventLoopGroup.shutdownGracefully();
-
     }
 }

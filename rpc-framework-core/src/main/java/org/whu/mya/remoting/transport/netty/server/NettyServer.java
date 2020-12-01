@@ -5,6 +5,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.FutureListener;
 import lombok.SneakyThrows;
@@ -68,6 +69,7 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<NioSocketChannel>() {
                         protected void initChannel(NioSocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
+                            pipeline.addLast(new IdleStateHandler(10, 10 ,10));
                             pipeline.addLast(new RpcMessageDecoder());
                             pipeline.addLast(new RpcMessageEncoder());
                             pipeline.addLast(serviceHandlerGroup, new NettyServerHandler());

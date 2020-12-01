@@ -23,7 +23,7 @@ public class ChannelProvider {
             Channel channel = channelMap.get(key);
             if (channel != null && channel.isActive()) {
                 // 该通道还处于连接状态
-//                System.out.println("已经有老通道还处于活跃状态");
+                System.out.println("已经有老通道还处于活跃状态");
                 return channel;
             }else channelMap.remove(key);
         }
@@ -31,6 +31,7 @@ public class ChannelProvider {
         channelMap.put(key, channel);
         return channel;
     }
+
 
 
 }
