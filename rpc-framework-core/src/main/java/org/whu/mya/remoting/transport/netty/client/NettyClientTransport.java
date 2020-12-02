@@ -10,11 +10,14 @@ import org.whu.mya.enums.SerializationTypeEnum;
 import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.factory.SingletonFactory;
 import org.whu.mya.registry.ServiceDiscovery;
+import org.whu.mya.registry.ServiceRegistry;
 import org.whu.mya.remoting.constants.RpcConstants;
 import org.whu.mya.remoting.dto.RpcMessage;
 import org.whu.mya.remoting.dto.RpcRequest;
 import org.whu.mya.remoting.dto.RpcResponce;
 import org.whu.mya.remoting.transport.ClientTransport;
+import org.whu.mya.spring.config.RegistryConfig;
+import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.net.InetSocketAddress;
 import java.security.spec.RSAOtherPrimeInfo;
@@ -32,7 +35,9 @@ public class NettyClientTransport implements ClientTransport {
     public NettyClientTransport() {
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
-        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
+        serviceDiscovery = ExtensionLoader
+                .getExtensionLoader(ServiceDiscovery.class)
+                .getExtension(((RegistryConfig) MyApplicationContextUtil.getBean("registry")).getType());
     }
 
     public CompletableFuture<RpcResponce<Object>> sendRpcRequest(RpcRequest request) {

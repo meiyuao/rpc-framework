@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:rpc="http://www.mya.com/schema/rpc"
+
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.mya.com/schema/rpc http://www.mya.com/schema/rpc.xsd">
+        http://www.mya.com/schema/rpc http://www.mya.com/schema/rpc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="org.whu.mya"/>
 
     <rpc:service id="HelloServiceImpl"  interface="org.whu.mya.service.HelloService"
                  ref="org.whu.mya.serviceImpl.HelloServiceImpl" group="group1"/>
@@ -11,9 +17,11 @@
     <rpc:service id="HelloServiceImpl2" interface="org.whu.mya.service.HelloService"
                  ref="org.whu.mya.serviceImpl.HelloServiceImpl2" group="group2"/>
 
-    <rpc:registry id="registry" address="192.168.200.176" port="2181"/>
+<!--    <rpc:registry id="registry" type="zk" address="192.168.200.176" port="2181"/>-->
+    <rpc:registry id="registry" type="nacos" address="192.168.200.176" port="8848"/>
 
     <rpc:serialize id="serialize" type="protostuff"/>
 
-    <bean class="org.whu.mya.spring.BeanProcessor"/>
+<!--    <bean class="org.whu.mya.spring.BeanProcessor"/>-->
+
 </beans>

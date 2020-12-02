@@ -19,6 +19,7 @@
         <protostuff.runtime.version>1.6.0</protostuff.runtime.version>
         <protostuff.core.version>1.6.0</protostuff.core.version>
         <curator-version>4.2.0</curator-version>
+        <nacos-version>0.3.6</nacos-version>
     </properties>
 
     <modules>

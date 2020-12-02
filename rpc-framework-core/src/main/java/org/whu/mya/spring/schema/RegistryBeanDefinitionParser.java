@@ -18,7 +18,7 @@ public class RegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
 
     @Override
     protected void doParse(Element element, BeanDefinitionBuilder builder) {
-
+        builder.addPropertyValue("type", element.getAttribute("type"));
         builder.addPropertyValue("address", element.getAttribute("address"));
         builder.addPropertyValue("port", element.getAttribute("port"));
     }

@@ -27,6 +27,8 @@
     <xsd:complexType name="registry-type">
         <xsd:attribute name="id" type="xsd:string">
         </xsd:attribute>
+        <xsd:attribute name="type" type="xsd:string">
+        </xsd:attribute>
         <xsd:attribute name="address" type="xsd:string">
         </xsd:attribute>
         <xsd:attribute name="port" type="xsd:int">

@@ -11,7 +11,6 @@ import org.whu.mya.spring.config.ServiceBean;
 
 
 public class ServiceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
-    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
 
     @Override
     protected Class<?> getBeanClass(Element element) {

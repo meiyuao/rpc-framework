@@ -32,7 +32,6 @@ public final class CuratorUtils {
     private static CuratorFramework zkClient = getZkClient();
     private static String defaultZookeeperAddress = "192.168.200.176:2181";
     private static boolean isFirstAddWatch = true;
-//    private static final ZkServiceDiscovery serviceDiscovery = (ZkServiceDiscovery) ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
 
 
     private CuratorUtils(){ }

@@ -2,17 +2,21 @@ package org.whu.mya.provider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.extension.ExtensionLoader;
 import org.whu.mya.registry.ServiceRegistry;
 import org.whu.mya.remoting.transport.netty.server.NettyServer;
+import org.whu.mya.spring.config.RegistryConfig;
 import org.whu.mya.spring.config.ServiceBean;
+import org.whu.mya.util.MyApplicationContextUtil;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 
 public class ServiceProviderImpl implements ServiceProvider {
     private final Map<String, Object> serviceMap;
@@ -21,7 +25,9 @@ public class ServiceProviderImpl implements ServiceProvider {
 
     public ServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
-        serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension("zk");
+        serviceRegistry = ExtensionLoader
+                .getExtensionLoader(ServiceRegistry.class)
+                .getExtension(((RegistryConfig) MyApplicationContextUtil.getBean("registry")).getType());
     }
 
     /**

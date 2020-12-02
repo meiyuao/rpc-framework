@@ -1,1 +1,2 @@
 zk=org.whu.mya.registry.zk.ZkServiceDiscovery
+nacos=org.whu.mya.registry.nacos.NacosServiceDiscovery

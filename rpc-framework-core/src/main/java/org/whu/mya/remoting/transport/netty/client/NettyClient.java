@@ -18,10 +18,8 @@ import java.net.InetSocketAddress;
 public class NettyClient {
     private final Bootstrap bootstrap;
     private final EventLoopGroup eventLoopGroup;
-    private final ServiceDiscovery serviceDiscovery;
 
     public NettyClient() {
-        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
 
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();

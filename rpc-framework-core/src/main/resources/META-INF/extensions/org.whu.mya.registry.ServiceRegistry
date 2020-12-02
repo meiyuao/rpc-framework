@@ -1,1 +1,2 @@
 zk=org.whu.mya.registry.zk.ZkServiceRegistry
+nacos=org.whu.mya.registry.nacos.NacosServiceRegistry

@@ -58,6 +58,12 @@
         </dependency>
         <!--Zookeeper工具 -->
 
+        <!-- https://mvnrepository.com/artifact/com.alibaba.nacos/nacos-spring-context -->
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-spring-context</artifactId>
+            <version>${nacos-version}</version>
+        </dependency>
 
 
     </dependencies>

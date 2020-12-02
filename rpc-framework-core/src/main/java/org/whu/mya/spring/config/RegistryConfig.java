@@ -13,4 +13,5 @@ public class RegistryConfig {
 
     private String address; // 接口权限名
     private int port; // 实现类全限定名
+    private String type;
 }

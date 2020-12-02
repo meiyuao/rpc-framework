@@ -10,6 +10,7 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.FutureListener;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import org.whu.mya.entity.RpcServiceProperties;
 import org.whu.mya.factory.SingletonFactory;
 import org.whu.mya.provider.ServiceProviderImpl;
@@ -24,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class NettyServer {
-    public static final int PORT = 9997;
+    public static final int PORT = 9998;
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     private Channel serverChannel;
     private ApplicationContext context;

@@ -1,6 +1,12 @@
 package org.whu.mya.spring;
 
+import com.alibaba.nacos.api.annotation.NacosInjected;
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
+import com.alibaba.nacos.api.exception.NacosException;
+import com.alibaba.nacos.api.naming.NamingService;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.whu.mya.entity.RpcServiceProperties;
@@ -14,18 +20,19 @@ import java.lang.reflect.Field;
 
 @Component
 public class BeanProcessor implements BeanPostProcessor {
+//    @NacosInjected
+//    private NamingService namingService;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-
         return null;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+//        System.out.println(namingService);
         if (bean instanceof ReferenceBean) {
             ReferenceBean referenceBean = (ReferenceBean) bean;
-
             MyApplicationContextUtil.addInterestedService(
                     RpcServiceProperties.builder()
                             .serviceName(referenceBean.getClazz().getName())
@@ -33,7 +40,6 @@ public class BeanProcessor implements BeanPostProcessor {
                             .build()
                             .toRpcServiceName()
             );
-
         }//        if (bean instanceof ReferenceBean) {
 //            System.out.println(bean.getClass());
 //            ReferenceBean referenceBean = (ReferenceBean) bean;
